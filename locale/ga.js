@@ -40,7 +40,7 @@
             sameDay: '[Inniu ag] LT',
             nextDay: '[Amárach ag] LT',
             nextWeek: 'dddd [ag] LT',
-            lastDay: '[Inné aig] LT',
+            lastDay: '[Inné ag] LT',
             lastWeek: 'dddd [seo caite] [ag] LT',
             sameElse: 'L'
         },
@@ -56,7 +56,7 @@
             d: 'lá',
             dd: '%d lá',
             M: 'mí',
-            MM: '%d mí',
+            MM: '%d míonna',
             y: 'bliain',
             yy: '%d bliain'
         },

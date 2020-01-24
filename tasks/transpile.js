@@ -44,7 +44,7 @@ module.exports = function (grunt) {
     }
 
     function rollupBundle(opts) {
-        // entry, umdName, skipMoment
+        // entry, bundleName, skipMoment
 
         var rollupOpts = {
             input: opts.entry,
@@ -52,8 +52,8 @@ module.exports = function (grunt) {
                 // babel({})
             ]
         }, bundleOpts = {
-            format: 'umd',
-            name: opts.umdName != null ? opts.umdName : 'not_used'
+            format: opts.format || 'umd',
+            name: opts.bundleName != null ? opts.bundleName : 'not_used'
         };
 
         if (opts.skipMoment) {
@@ -79,15 +79,16 @@ module.exports = function (grunt) {
 
     function transpile(opts) {
         // base, entry, skipMoment, headerFile, skipLines, target
-        var umdName = opts.headerFile != null && opts.headerFile !== 'none' ? 'not_used' : opts.umdName,
-            headerFile = opts.headerFile ? opts.headerFile : 'templates/default.js',
+        var bundleName = opts.headerFile != null && opts.headerFile !== 'none' ? 'not_used' : opts.bundleName,
+            headerFile = opts.headerFile ? opts.headerFile : (opts.format === 'esm' ? 'none' : 'templates/default.js'),
             header = getHeaderByFile(headerFile),
-            skipLines = opts.skipLines != null ? opts.skipLines : 5;
+            skipLines = opts.format === 'esm' ? 0 : (opts.skipLines != null ? opts.skipLines : 5);
 
         return rollupBundle({
             entry: path.join(opts.base, opts.entry),
             skipMoment: opts.skipMoment != null ? opts.skipMoment : false,
-            umdName: umdName
+            format: opts.format,
+            bundleName: bundleName
         }).then(function (code) {
             var fixed = header + code.split('\n').slice(skipLines).join('\n');
             if (opts.moveComments) {
@@ -143,7 +144,7 @@ module.exports = function (grunt) {
         return transpile({
             base: TMP_DIR,
             entry: entry,
-            umdName: opts.umdName || 'not_used',
+            bundleName: opts.bundleName || 'not_used',
             headerFile: opts.headerFile,
             skipLines: opts.skipLines,
             moveComments: opts.moveComments,
@@ -170,23 +171,23 @@ module.exports = function (grunt) {
             code: code,
             target: target,
             skipMoment: opts.skipMoment,
-            headerFile: opts.skipMoment === true ? 'templates/locale-header.js' : 'templates/default.js',
+            headerFile: opts.format === 'esm' ? 'none' : (opts.skipMoment === true ? 'templates/locale-header.js' : 'templates/default.js'),
             skipLines: opts.skipMoment === true ? 7 : 5
         });
     }
 
-    grunt.task.registerTask('transpile-raw', 'convert es6 to umd', function () {
-        var done = this.async();
-
-        transpile({
+    function build(format) {
+        var targetDir = `build/${format}`;
+        return transpile({
             base: 'src',
             entry: 'moment.js',
-            umdName: 'moment',
-            target: 'build/umd/moment.js',
+            format,
+            bundleName: 'moment',
+            target: `${targetDir}/moment.js`,
             skipLines: 5,
             moveComments: true
         }).then(function () {
-            grunt.log.ok('build/umd/moment.js');
+            grunt.log.ok(`${targetDir}/moment.js`);
         }).then(function () {
             return transpileMany({
                 base: 'src',
@@ -194,11 +195,12 @@ module.exports = function (grunt) {
                 headerFile: 'templates/locale-header.js',
                 skipLines: 7,
                 moveComments: true,
-                targetDir: 'build/umd',
+                format,
+                targetDir,
                 skipMoment: true
             });
         }).then(function () {
-            grunt.log.ok('build/umd/locale/*.js');
+            grunt.log.ok(`${targetDir}/locale/*.js`);
         }).then(function () {
             return transpileMany({
                 base: 'src',
@@ -206,11 +208,12 @@ module.exports = function (grunt) {
                 headerFile: 'templates/test-header.js',
                 skipLines: 7,
                 moveComments: true,
-                targetDir: 'build/umd',
+                format,
+                targetDir,
                 skipMoment: true
             });
         }).then(function () {
-            grunt.log.ok('build/umd/test/moment/*.js');
+            grunt.log.ok(`${targetDir}/test/moment/*.js`);
         }).then(function () {
             return transpileMany({
                 base: 'src',
@@ -218,30 +221,42 @@ module.exports = function (grunt) {
                 headerFile: 'templates/test-header.js',
                 skipLines: 7,
                 moveComments: true,
-                targetDir: 'build/umd',
+                format,
+                targetDir,
                 skipMoment: true
             });
         }).then(function () {
-            grunt.log.ok('build/umd/test/locale/*.js');
+            grunt.log.ok(`${targetDir}/test/locale/*.js`);
         }).then(function () {
             return generateLocales(
-                'build/umd/min/locales.js',
+                `${targetDir}/min/locales.js`,
                 grunt.file.expand({cwd: 'src'}, 'locale/*.js'),
-                {skipMoment: true}
+                {format, skipMoment: true}
             );
         }).then(function () {
-            grunt.log.ok('build/umd/min/locales.js');
+            grunt.log.ok(`${targetDir}/min/locales.js`);
         }).then(function () {
             return generateLocales(
-                'build/umd/min/moment-with-locales.js',
+                `${targetDir}/min/moment-with-locales.js`,
                 grunt.file.expand({cwd: 'src'}, 'locale/*.js'),
-                {skipMoment: false}
+                {format, skipMoment: false}
             );
         }).then(function () {
-            grunt.log.ok('build/umd/min/moment-with-locales.js');
-        }).then(done, function (e) {
-            grunt.log.error('error transpiling', e);
-            done(e);
+            grunt.log.ok(`${targetDir}/min/moment-with-locales.js`);
+        });
+    }
+
+    grunt.task.registerTask('transpile-umd', 'convert es6 to umd', function () {
+        var done = this.async();
+        build('umd').then(done, function (e) {
+            grunt.log.error('error transpiling to umd', e);
+        });
+    });
+
+    grunt.task.registerTask('transpile-esm', 'convert es6 to esm', function () {
+        var done = this.async();
+        build('esm').then(done, function (e) {
+            grunt.log.error('error transpiling to esm', e);
         });
     });
 
@@ -308,7 +323,8 @@ module.exports = function (grunt) {
             function (locales) {
         var tasks = [
             'clean:build',
-            'transpile-raw',
+            // 'transpile-umd',
+            'transpile-esm',
             'concat:tests'
         ];
 

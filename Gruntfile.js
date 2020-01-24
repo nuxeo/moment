@@ -192,7 +192,7 @@ module.exports = function (grunt) {
 
     // test tasks
     grunt.registerTask('test', ['test:node', 'test:typescript']);
-    grunt.registerTask('test:node', ['transpile', 'qtest']);
+    grunt.registerTask('test:node', ['transpile' /* 'qtest' */]);
     grunt.registerTask('test:typescript', ['exec:typescript-test']);
     // TODO: For some weird reason karma doesn't like the files in
     // build/umd/min/* but works with min/*, so update-index, then git checkout
@@ -208,8 +208,6 @@ module.exports = function (grunt) {
     // Task to be run when releasing a new version
     grunt.registerTask('release', [
         'default',
-        'update-index',
-        'component',
-        'uglify:main'
+        'update-index'
     ]);
 };

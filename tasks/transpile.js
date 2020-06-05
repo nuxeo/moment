@@ -109,6 +109,7 @@ module.exports = function (grunt) {
                         return transpile({
                             base: opts.base,
                             entry: file,
+                            format: opts.format,
                             headerFile: opts.headerFile,
                             skipMoment: opts.skipMoment,
                             skipLines: opts.skipLines,
@@ -144,6 +145,7 @@ module.exports = function (grunt) {
         return transpile({
             base: TMP_DIR,
             entry: entry,
+            format: opts.format,
             bundleName: opts.bundleName || 'not_used',
             headerFile: opts.headerFile,
             skipLines: opts.skipLines,
@@ -169,6 +171,7 @@ module.exports = function (grunt) {
         return transpileCode({
             base: 'src',
             code: code,
+            format: opts.format,
             target: target,
             skipMoment: opts.skipMoment,
             headerFile: opts.format === 'esm' ? 'none' : (opts.skipMoment === true ? 'templates/locale-header.js' : 'templates/default.js'),

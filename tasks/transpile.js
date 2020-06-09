@@ -195,7 +195,7 @@ module.exports = function (grunt) {
             return transpileMany({
                 base: 'src',
                 pattern: 'locale/*.js',
-                headerFile: 'templates/locale-header.js',
+                headerFile: format === 'esm' ? 'none' : 'templates/locale-header.js',
                 skipLines: 7,
                 moveComments: true,
                 format,
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
             return transpileMany({
                 base: 'src',
                 pattern: 'test/moment/*.js',
-                headerFile: 'templates/test-header.js',
+                headerFile: format === 'esm' ? 'none' : 'templates/test-header.js',
                 skipLines: 7,
                 moveComments: true,
                 format,
@@ -221,7 +221,7 @@ module.exports = function (grunt) {
             return transpileMany({
                 base: 'src',
                 pattern: 'test/locale/*.js',
-                headerFile: 'templates/test-header.js',
+                headerFile: format === 'esm' ? 'none' : 'templates/test-header.js',
                 skipLines: 7,
                 moveComments: true,
                 format,

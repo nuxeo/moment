@@ -82,7 +82,7 @@ module.exports = function (grunt) {
         var bundleName = opts.headerFile != null && opts.headerFile !== 'none' ? 'not_used' : opts.bundleName,
             headerFile = opts.headerFile ? opts.headerFile : (opts.format === 'esm' ? 'none' : 'templates/default.js'),
             header = getHeaderByFile(headerFile),
-            skipLines = opts.format === 'esm' ? 0 : (opts.skipLines != null ? opts.skipLines : 5);
+            skipLines = opts.skipLines != null ? opts.skipLines : 5;
 
         return rollupBundle({
             entry: path.join(opts.base, opts.entry),
@@ -175,7 +175,7 @@ module.exports = function (grunt) {
             target: target,
             skipMoment: opts.skipMoment,
             headerFile: opts.format === 'esm' ? 'none' : (opts.skipMoment === true ? 'templates/locale-header.js' : 'templates/default.js'),
-            skipLines: opts.skipMoment === true ? 7 : 5
+            skipLines: opts.format === 'esm' ? 0 : (opts.skipMoment === true ? 7 : 5)
         });
     }
 
@@ -187,7 +187,7 @@ module.exports = function (grunt) {
             format,
             bundleName: 'moment',
             target: `${targetDir}/moment.js`,
-            skipLines: 5,
+            skipLines: format === 'esm' ? 0 : 5,
             moveComments: true
         }).then(function () {
             grunt.log.ok(`${targetDir}/moment.js`);
@@ -196,7 +196,7 @@ module.exports = function (grunt) {
                 base: 'src',
                 pattern: 'locale/*.js',
                 headerFile: format === 'esm' ? 'none' : 'templates/locale-header.js',
-                skipLines: 7,
+                skipLines: format === 'esm' ? 1 : 7,
                 moveComments: true,
                 format,
                 targetDir,

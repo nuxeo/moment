@@ -1,5 +1,4 @@
 
-import moment from './';
 
 var suffixes = {
     1: '\'inci',

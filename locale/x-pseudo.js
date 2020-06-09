@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 var xPseudo = moment.defineLocale('x-pseudo', {

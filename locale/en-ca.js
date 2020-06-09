@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 var enCa = moment.defineLocale('en-ca', {

@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 var tzmLatn = moment.defineLocale('tzm-latn', {

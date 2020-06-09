@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 function isFunction(input) {
     return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';

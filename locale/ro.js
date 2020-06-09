@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 function relativeTimeWithPlural(number, withoutSuffix, key) {

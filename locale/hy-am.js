@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 var hyAm = moment.defineLocale('hy-am', {

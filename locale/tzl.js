@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 // After the year there should be a slash and the amount of years since December 26, 1979 in Roman numerals.

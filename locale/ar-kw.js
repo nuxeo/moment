@@ -1,6 +1,5 @@
 //! moment.js locale configuration
 
-import moment from './';
 
 
 var arKw = moment.defineLocale('ar-kw', {

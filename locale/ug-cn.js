@@ -1,6 +1,5 @@
 //! moment.js language configuration
 
-import moment from './';
 
 
 var ugCn = moment.defineLocale('ug-cn', {

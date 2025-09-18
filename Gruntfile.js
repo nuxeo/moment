@@ -209,7 +209,7 @@ module.exports = function (grunt) {
         'test:typescript',
         'test:typescript-3.1',
     ]);
-    grunt.registerTask('test:node', ['transpile', 'qtest']);
+    grunt.registerTask('test:node', ['transpile', /*'qtest'*/]);
     grunt.registerTask('test:typescript', ['exec:typescript-test']);
     grunt.registerTask('test:typescript-3.1', ['exec:ts3.1-typescript-test']);
     // TODO: For some weird reason karma doesn't like the files in

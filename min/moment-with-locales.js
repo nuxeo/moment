@@ -3,12 +3,7 @@
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
-
-;(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    global.moment = factory()
-}(this, (function () { 'use strict';
+'use strict';
 
     var hookCallback;
 
@@ -19081,6 +19076,5 @@
 
     hooks.locale('en');
 
-    return hooks;
-
-})));
+    const moment = hooks; // 'hooks' is the internal function Moment uses to create dates
+    export default moment;

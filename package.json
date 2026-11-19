@@ -58,6 +58,8 @@
         "release:minify": "node scripts/minify.js",
         "release:update-component": "node scripts/update-component.js",
         "release:update-index": "node scripts/update-index.js",
+        "nuxeo:check-package": "node scripts/nuxeo-check-package.js",
+        "pretest": "node scripts/nuxeo-commonjs-build-dir.js",
         "test": "node scripts/test.js",
         "test:coverage": "nyc pnpm test && nyc report --reporter=lcov",
         "test:typescript": "run-p test:typescript:1 test:typescript:2 test:typescript:3.0 test:typescript:3.1 test:typescript:3.9 test:typescript:4 test:typescript:5 test:typescript:6 test:typescript:7",
@@ -70,7 +72,7 @@
         "test:typescript:5": "node_modules/typescript5/bin/tsc --project typing-tests/modern",
         "test:typescript:6": "node_modules/typescript6/bin/tsc --project typing-tests/modern",
         "test:typescript:7": "node_modules/typescript/bin/tsc --project typing-tests/modern",
-        "test:watch": "node --watch-path=src scripts/test.js",
+        "test:watch": "node scripts/nuxeo-commonjs-build-dir.js && node --watch-path=src scripts/test.js",
         "validate": "run-s lint test"
     },
     "devDependencies": {
